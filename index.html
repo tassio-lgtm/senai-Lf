@@ -1,0 +1,1905 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeChallenge Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 30%, #16213e 70%, #0f3460 100%);
+        }
+        
+        .gamer-bg {
+            background: radial-gradient(ellipse at center, #1a1a2e 0%, #0a0a0a 100%);
+            position: relative;
+        }
+        
+        .gamer-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(0, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 0, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(0, 255, 127, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+        }
+        
+        .card-shadow {
+            box-shadow: 0 8px 32px rgba(0, 255, 255, 0.1), 0 0 20px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(0, 255, 255, 0.2);
+        }
+        
+        .neon-border {
+            border: 2px solid transparent;
+            background: linear-gradient(45deg, #0a0a0a, #1a1a2e) padding-box,
+                        linear-gradient(45deg, #00ffff, #ff00ff, #00ff7f) border-box;
+        }
+        
+        .streak-fire {
+            animation: flicker 1.5s ease-in-out infinite alternate;
+            filter: drop-shadow(0 0 10px currentColor);
+        }
+        
+        @keyframes flicker {
+            0% { transform: scale(1) rotate(-1deg); opacity: 0.8; }
+            100% { transform: scale(1.1) rotate(1deg); opacity: 1; }
+        }
+        
+        .hover-lift {
+            transition: all 0.3s ease;
+        }
+        
+        .hover-lift:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 255, 255, 0.2), 0 0 30px rgba(0, 255, 255, 0.1);
+            border-color: rgba(0, 255, 255, 0.4);
+        }
+        
+        .modal-backdrop {
+            backdrop-filter: blur(12px);
+            background: rgba(0, 0, 0, 0.8);
+        }
+        
+        .difficulty-easy { 
+            background: linear-gradient(45deg, #00ff7f, #32cd32);
+            box-shadow: 0 0 20px rgba(0, 255, 127, 0.3);
+        }
+        .difficulty-medium { 
+            background: linear-gradient(45deg, #ffa500, #ff8c00);
+            box-shadow: 0 0 20px rgba(255, 165, 0, 0.3);
+        }
+        .difficulty-hard { 
+            background: linear-gradient(45deg, #ff1493, #dc143c);
+            box-shadow: 0 0 20px rgba(255, 20, 147, 0.3);
+        }
+        
+        .glow-text {
+            text-shadow: 0 0 20px rgba(0, 255, 255, 0.5), 0 0 40px rgba(0, 255, 255, 0.3);
+        }
+        
+        .side-panel {
+            background: linear-gradient(135deg, rgba(26, 26, 46, 0.9) 0%, rgba(10, 10, 10, 0.9) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 255, 255, 0.2);
+        }
+        
+        .stats-number {
+            background: linear-gradient(45deg, #00ffff, #ff00ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .language-card {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(147, 51, 234, 0.1) 100%);
+            border: 2px solid rgba(59, 130, 246, 0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .language-card:hover {
+            border-color: rgba(59, 130, 246, 0.4);
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(147, 51, 234, 0.15) 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.2);
+        }
+        
+        .language-card.selected {
+            border-color: rgba(34, 197, 94, 0.6);
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(59, 130, 246, 0.15) 100%);
+            box-shadow: 0 0 20px rgba(34, 197, 94, 0.3);
+        }
+        
+        .language-card.selected::after {
+            content: '✅';
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: linear-gradient(45deg, #22c55e, #16a34a);
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            border: 2px solid rgba(0, 0, 0, 0.8);
+        }
+        
+        .level-selector {
+            background: rgba(17, 24, 39, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            animation: slideDown 0.3s ease-out;
+        }
+        
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .level-button {
+            transition: all 0.2s ease;
+        }
+        
+        .level-button:hover {
+            background: rgba(59, 130, 246, 0.2);
+            transform: translateX(4px);
+        }
+        
+        .level-button.selected {
+            background: linear-gradient(45deg, #3b82f6, #1d4ed8);
+            color: white;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="min-h-screen gradient-bg text-white">
+    <!-- Tela de Login - Desafiante -->
+    <div id="challengerLoginScreen" class="hidden min-h-screen gamer-bg flex items-center justify-center p-8">
+        <div class="bg-gray-900/90 backdrop-blur-lg rounded-2xl p-8 max-w-md w-full card-shadow neon-border">
+            <div class="text-center mb-8">
+                <h1 class="text-4xl font-bold mb-2 glow-text">⚔️ ENTRAR NA ARENA</h1>
+                <p class="text-gray-300">Acesse sua conta de desafiante</p>
+            </div>
+            
+            <!-- Formulário de Login -->
+            <form id="challengerLoginForm" onsubmit="handleChallengerLogin(event)">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-2 text-cyan-400">E-mail</label>
+                        <input type="email" id="challengerLoginEmail" required class="w-full bg-gray-800 border border-cyan-500/30 rounded-lg px-4 py-3 text-white focus:border-cyan-400 focus:outline-none transition-all">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium mb-2 text-cyan-400">Senha</label>
+                        <input type="password" id="challengerLoginPassword" required class="w-full bg-gray-800 border border-cyan-500/30 rounded-lg px-4 py-3 text-white focus:border-cyan-400 focus:outline-none transition-all">
+                    </div>
+                    
+                    <div id="challengerLoginError" class="hidden bg-red-900/30 border border-red-500/30 rounded-lg p-3 text-red-300 text-sm"></div>
+                    
+                    <button type="submit" class="w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white py-3 px-6 rounded-lg font-medium transition-all hover:shadow-lg hover:shadow-cyan-500/25">
+                        ⚔️ Entrar na Arena
+                    </button>
+                </div>
+            </form>
+            
+            <div class="mt-6 text-center space-y-3">
+                <a href="#" onclick="showForgotPassword()" class="text-cyan-400 hover:text-cyan-300 text-sm transition-all">Esqueci minha senha</a>
+                
+                <div class="border-t border-gray-700 pt-4">
+                    <p class="text-gray-400 text-sm mb-3">Não tem uma conta?</p>
+                    <button onclick="showRegisterScreen('challenger')" class="w-full bg-gray-800/50 hover:bg-gray-700/50 text-white py-2 px-4 rounded-lg text-sm transition-all border border-cyan-500/30 hover:border-cyan-400/50">
+                        Cadastrar como Desafiante
+                    </button>
+                </div>
+                
+                <div class="mt-4">
+                    <button onclick="showHomeScreen()" class="text-gray-400 hover:text-white transition-all text-sm">
+                        ← Voltar ao início
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tela de Login - Empresa -->
+    <div id="companyLoginScreen" class="hidden min-h-screen gamer-bg flex items-center justify-center p-8">
+        <div class="bg-gray-900/90 backdrop-blur-lg rounded-2xl p-8 max-w-md w-full card-shadow neon-border">
+            <div class="text-center mb-8">
+                <h1 class="text-4xl font-bold mb-2 glow-text">🏆 RECRUTAR TALENTOS</h1>
+                <p class="text-gray-300">Acesse sua conta empresarial</p>
+            </div>
+            
+            <!-- Formulário de Login -->
+            <form id="companyLoginForm" onsubmit="handleCompanyLogin(event)">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-2 text-purple-400">E-mail Corporativo</label>
+                        <input type="email" id="companyLoginEmail" required class="w-full bg-gray-800 border border-purple-500/30 rounded-lg px-4 py-3 text-white focus:border-purple-400 focus:outline-none transition-all">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium mb-2 text-purple-400">Senha</label>
+                        <input type="password" id="companyLoginPassword" required class="w-full bg-gray-800 border border-purple-500/30 rounded-lg px-4 py-3 text-white focus:border-purple-400 focus:outline-none transition-all">
+                    </div>
+                    
+                    <div id="companyLoginError" class="hidden bg-red-900/30 border border-red-500/30 rounded-lg p-3 text-red-300 text-sm"></div>
+                    
+                    <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white py-3 px-6 rounded-lg font-medium transition-all hover:shadow-lg hover:shadow-purple-500/25">
+                        🏢 Acessar Plataforma
+                    </button>
+                </div>
+            </form>
+            
+            <div class="mt-6 text-center space-y-3">
+                <a href="#" onclick="showForgotPassword()" class="text-purple-400 hover:text-purple-300 text-sm transition-all">Esqueci minha senha</a>
+                
+                <div class="border-t border-gray-700 pt-4">
+                    <p class="text-gray-400 text-sm mb-3">Não tem uma conta?</p>
+                    <button onclick="showRegisterScreen('company')" class="w-full bg-gray-800/50 hover:bg-gray-700/50 text-white py-2 px-4 rounded-lg text-sm transition-all border border-purple-500/30 hover:border-purple-400/50">
+                        Cadastrar como Empresa
+                    </button>
+                </div>
+                
+                <div class="mt-4">
+                    <button onclick="showHomeScreen()" class="text-gray-400 hover:text-white transition-all text-sm">
+                        ← Voltar ao início
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tela de Escolha de Tipo de Cadastro -->
+    <div id="registrationChoiceScreen" class="hidden min-h-screen gamer-bg flex items-center justify-center p-8">
+        <div class="bg-gray-900/90 backdrop-blur-lg rounded-2xl p-8 max-w-lg w-full card-shadow neon-border">
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-bold mb-4 glow-text">🎯 Junte-se ao CodeArena</h1>
+                <p class="text-xl text-gray-300 mb-2">Você é um Desafiante da Arena</p>
+                <p class="text-xl text-gray-300">ou um Recrutador de Talentos?</p>
+            </div>
+            
+            <div class="space-y-6">
+                <button onclick="showRegisterScreen('challenger')" class="w-full neon-border bg-gradient-to-r from-cyan-900 to-blue-900 hover:from-cyan-800 hover:to-blue-800 text-white py-6 px-8 rounded-2xl text-xl font-semibold hover:scale-105 transition-all duration-300 card-shadow hover-lift group">
+                    <span class="flex items-center justify-center space-x-3">
+                        <span class="text-3xl">⚔️</span>
+                        <span>Sou Desafiante da Arena</span>
+                        <span class="text-cyan-400 group-hover:animate-pulse">→</span>
+                    </span>
+                    <p class="text-sm text-cyan-200 mt-2 opacity-80">Resolva desafios, suba no ranking e mostre suas habilidades</p>
+                </button>
+                
+                <button onclick="showRegisterScreen('company')" class="w-full neon-border bg-gradient-to-r from-purple-900 to-indigo-900 hover:from-purple-800 hover:to-indigo-800 text-white py-6 px-8 rounded-2xl text-xl font-semibold hover:scale-105 transition-all duration-300 card-shadow hover-lift group">
+                    <span class="flex items-center justify-center space-x-3">
+                        <span class="text-3xl">🏆</span>
+                        <span>Sou Recrutador de Talentos</span>
+                        <span class="text-purple-400 group-hover:animate-pulse">→</span>
+                    </span>
+                    <p class="text-sm text-purple-200 mt-2 opacity-80">Encontre os melhores desenvolvedores para sua equipe</p>
+                </button>
+            </div>
+            
+            <div class="mt-8 text-center">
+                <button onclick="showHomeScreen()" class="text-gray-400 hover:text-white transition-all text-sm">
+                    ← Voltar ao início
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tela de Cadastro - Desafiante -->
+    <div id="challengerRegisterScreen" class="hidden min-h-screen gamer-bg flex items-center justify-center p-8">
+        <div class="bg-gray-900/90 backdrop-blur-lg rounded-2xl p-8 max-w-2xl w-full card-shadow neon-border">
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-bold mb-2 glow-text">🧑‍💻 Cadastro de Desafiante</h1>
+                <p class="text-gray-300">Junte-se à comunidade de desenvolvedores</p>
+            </div>
+            
+            <form id="challengerRegisterForm" onsubmit="handleChallengerRegister(event)">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Dados Pessoais -->
+                    <div class="space-y-4">
+                        <h3 class="text-lg font-bold text-cyan-400 mb-4">📋 Dados Pessoais</h3>
+                        
+                        <div>
+                            <label class="block text-sm font-medium mb-2 text-cyan-400">Nome Completo *</label>
+                            <input type="text" id="challengerName" required class="w-full bg-gray-800 border border-cyan-500/30 rounded-lg px-4 py-3 text-white focus:border-cyan-400 focus:outline-none transition-all">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium mb-2 text-cyan-400">CPF *</label>
+                            <input type="text" id="challengerCPF" required placeholder="000.000.000-00" class="w-full bg-gray-800 border border-cyan-500/30 rounded-lg px-4 py-3 text-white focus:border-cyan-400 focus:outline-none transition-all">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium mb-2 text-cyan-400">E-mail *</label>
+                            <input type="email" id="challengerEmail" required class="w-full bg-gray-800 border border-cyan-500/30 rounded-lg px-4 py-3 text-white focus:border-cyan-400 focus:outline-none transition-all">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium mb-2 text-cyan-400">Senha *</label>
+                            <input type="password" id="challengerPassword" required minlength="6" class="w-full bg-gray-800 border border-cyan-500/30 rounded-lg px-4 py-3 text-white focus:border-cyan-400 focus:outline-none transition-all">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium mb-2 text-cyan-400">Confirmar Senha *</label>
+                            <input type="password" id="challengerPasswordConfirm" required class="w-full bg-gray-800 border border-cyan-500/30 rounded-lg px-4 py-3 text-white focus:border-cyan-400 focus:outline-none transition-all">
+                        </div>
+                    </div>
+                    
+                    <!-- Conhecimentos Técnicos -->
+                    <div class="space-y-4">
+                        <h3 class="text-lg font-bold text-purple-400 mb-4">💻 Conhecimentos Técnicos</h3>
+                        
+                        <div>
+                            <label class="block text-sm font-medium mb-3 text-purple-400">Você já possui conhecimento em programação?</label>
+                            <div class="flex space-x-4">
+                                <label class="flex items-center">
+                                    <input type="radio" name="hasKnowledge" value="yes" onchange="toggleKnowledgeFields(true)" class="mr-2 text-purple-600">
+                                    <span class="text-white">Sim</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="radio" name="hasKnowledge" value="no" onchange="toggleKnowledgeFields(false)" class="mr-2 text-purple-600">
+                                    <span class="text-white">Não</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div id="knowledgeFields" class="hidden space-y-6">
+                            <!-- Opção para iniciantes -->
+                            <div class="bg-gradient-to-r from-blue-900/20 to-cyan-900/20 rounded-xl p-4 border border-blue-500/30">
+                                <label class="flex items-center cursor-pointer group">
+                                    <input type="checkbox" id="noLanguageYet" onchange="toggleNoLanguageOption()" class="mr-3 w-4 h-4 text-blue-600 bg-gray-800 border-blue-500/30 rounded focus:ring-blue-500 focus:ring-2">
+                                    <div class="flex items-center space-x-2">
+                                        <span class="text-2xl">🌱</span>
+                                        <span class="text-white font-medium group-hover:text-blue-300 transition-colors">Não conheço nenhuma linguagem ainda</span>
+                                    </div>
+                                </label>
+                                <p class="text-sm text-blue-200 mt-2 ml-7">Perfeito para quem está começando a jornada na programação!</p>
+                            </div>
+                            
+                            <!-- Busca de linguagens -->
+                            <div id="languageSearchContainer">
+                                <div class="relative">
+                                    <input type="text" id="languageSearch" placeholder="🔍 Buscar linguagem..." class="w-full bg-gray-800/50 border border-purple-500/30 rounded-lg px-4 py-3 pl-10 text-white focus:border-purple-400 focus:outline-none transition-all">
+                                    <div class="absolute left-3 top-1/2 transform -translate-y-1/2 text-purple-400">
+                                        🔍
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Grid de linguagens -->
+                            <div>
+                                <label class="block text-lg font-bold mb-4 text-purple-400">💻 Selecione suas linguagens</label>
+                                <div id="languageGrid" class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                                    <!-- Linguagens serão inseridas aqui dinamicamente -->
+                                </div>
+                            </div>
+                            
+                            <!-- Linguagens selecionadas -->
+                            <div id="selectedLanguagesContainer" class="hidden">
+                                <h4 class="text-lg font-bold text-cyan-400 mb-4">✅ Linguagens Selecionadas</h4>
+                                <div id="selectedLanguagesList" class="space-y-3">
+                                    <!-- Linguagens selecionadas com níveis aparecerão aqui -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="challengerRegisterError" class="hidden bg-red-900/30 border border-red-500/30 rounded-lg p-3 text-red-300 text-sm mt-6"></div>
+                
+                <div class="flex space-x-4 mt-8">
+                    <button type="button" onclick="showLoginScreen()" class="flex-1 bg-gray-800/50 hover:bg-gray-700/50 text-white py-3 px-6 rounded-lg font-medium transition-all border border-gray-500/30">
+                        ← Voltar
+                    </button>
+                    <button type="submit" class="flex-1 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white py-3 px-6 rounded-lg font-medium transition-all hover:shadow-lg hover:shadow-cyan-500/25">
+                        🚀 Criar Conta
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Tela de Cadastro - Empresa -->
+    <div id="companyRegisterScreen" class="hidden min-h-screen gamer-bg flex items-center justify-center p-8">
+        <div class="bg-gray-900/90 backdrop-blur-lg rounded-2xl p-8 max-w-lg w-full card-shadow neon-border">
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-bold mb-2 glow-text">🏢 Cadastro Empresarial</h1>
+                <p class="text-gray-300">Encontre os melhores talentos em programação</p>
+            </div>
+            
+            <form id="companyRegisterForm" onsubmit="handleCompanyRegister(event)">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-2 text-purple-400">Nome da Empresa *</label>
+                        <input type="text" id="companyName" required class="w-full bg-gray-800 border border-purple-500/30 rounded-lg px-4 py-3 text-white focus:border-purple-400 focus:outline-none transition-all">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium mb-2 text-purple-400">CNPJ *</label>
+                        <input type="text" id="companyCNPJ" required placeholder="00.000.000/0000-00" class="w-full bg-gray-800 border border-purple-500/30 rounded-lg px-4 py-3 text-white focus:border-purple-400 focus:outline-none transition-all">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium mb-2 text-purple-400">E-mail Corporativo *</label>
+                        <input type="email" id="companyEmail" required class="w-full bg-gray-800 border border-purple-500/30 rounded-lg px-4 py-3 text-white focus:border-purple-400 focus:outline-none transition-all">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium mb-2 text-purple-400">Nome do Responsável *</label>
+                        <input type="text" id="companyResponsible" required class="w-full bg-gray-800 border border-purple-500/30 rounded-lg px-4 py-3 text-white focus:border-purple-400 focus:outline-none transition-all">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium mb-2 text-purple-400">Senha *</label>
+                        <input type="password" id="companyPassword" required minlength="6" class="w-full bg-gray-800 border border-purple-500/30 rounded-lg px-4 py-3 text-white focus:border-purple-400 focus:outline-none transition-all">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium mb-2 text-purple-400">Confirmar Senha *</label>
+                        <input type="password" id="companyPasswordConfirm" required class="w-full bg-gray-800 border border-purple-500/30 rounded-lg px-4 py-3 text-white focus:border-purple-400 focus:outline-none transition-all">
+                    </div>
+                    
+                    <div class="bg-purple-900/20 border border-purple-500/30 rounded-lg p-4">
+                        <h4 class="font-bold text-purple-300 mb-2">🎯 Benefícios Empresariais</h4>
+                        <ul class="text-sm text-gray-300 space-y-1">
+                            <li>• Acesso ao banco de talentos qualificados</li>
+                            <li>• Filtros avançados por linguagem e nível</li>
+                            <li>• Histórico de desempenho dos candidatos</li>
+                            <li>• Sistema de ranking e avaliações</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div id="companyRegisterError" class="hidden bg-red-900/30 border border-red-500/30 rounded-lg p-3 text-red-300 text-sm mt-6"></div>
+                
+                <div class="flex space-x-4 mt-8">
+                    <button type="button" onclick="showLoginScreen()" class="flex-1 bg-gray-800/50 hover:bg-gray-700/50 text-white py-3 px-6 rounded-lg font-medium transition-all border border-gray-500/30">
+                        ← Voltar
+                    </button>
+                    <button type="submit" class="flex-1 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white py-3 px-6 rounded-lg font-medium transition-all hover:shadow-lg hover:shadow-purple-500/25">
+                        🏆 Criar Conta
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Tela Inicial -->
+    <div id="homeScreen" class="hidden min-h-screen gamer-bg flex items-center justify-center p-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-7xl mx-auto w-full">
+            <!-- Painel Esquerdo -->
+            <div class="side-panel rounded-2xl p-6 card-shadow">
+                <h3 class="text-2xl font-bold mb-6 glow-text">⚡ Stats Globais</h3>
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-300">Desenvolvedores Ativos:</span>
+                        <span class="stats-number text-2xl font-bold">47,892</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-300">Desafios Resolvidos:</span>
+                        <span class="stats-number text-2xl font-bold">1,234,567</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-300">Empresas Parceiras:</span>
+                        <span class="stats-number text-2xl font-bold">2,847</span>
+                    </div>
+                </div>
+                
+                <div class="mt-8">
+                    <h4 class="text-lg font-bold mb-4 text-cyan-400">🔥 Linguagens em Alta</h4>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-gray-300">JavaScript</span>
+                            <div class="w-24 bg-gray-700 rounded-full h-2">
+                                <div class="bg-gradient-to-r from-cyan-400 to-blue-500 h-2 rounded-full" style="width: 85%"></div>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-gray-300">Python</span>
+                            <div class="w-24 bg-gray-700 rounded-full h-2">
+                                <div class="bg-gradient-to-r from-green-400 to-emerald-500 h-2 rounded-full" style="width: 78%"></div>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-gray-300">C++</span>
+                            <div class="w-24 bg-gray-700 rounded-full h-2">
+                                <div class="bg-gradient-to-r from-purple-400 to-pink-500 h-2 rounded-full" style="width: 65%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Área Central -->
+            <div class="text-center flex flex-col justify-center">
+                <h1 class="text-7xl font-bold mb-6 glow-text">CODE<span class="text-cyan-400">ARENA</span></h1>
+                <p class="text-xl mb-12 text-gray-300">🎮 A arena definitiva para desenvolvedores</p>
+                
+                <div class="space-y-6">
+                    <button onclick="showChallengerLogin()" class="w-full neon-border bg-gradient-to-r from-gray-900 to-gray-800 text-white py-6 px-8 rounded-2xl text-xl font-semibold hover:scale-105 transition-all duration-300 card-shadow hover-lift group">
+                        <span class="flex items-center justify-center space-x-3">
+                            <span class="text-3xl">⚔️</span>
+                            <span>Entrar na Arena</span>
+                            <span class="text-cyan-400 group-hover:animate-pulse">→</span>
+                        </span>
+                    </button>
+                    
+                    <button onclick="showCompanyLogin()" class="w-full neon-border bg-gradient-to-r from-purple-900 to-indigo-900 text-white py-6 px-8 rounded-2xl text-xl font-semibold hover:scale-105 transition-all duration-300 card-shadow hover-lift group">
+                        <span class="flex items-center justify-center space-x-3">
+                            <span class="text-3xl">🏆</span>
+                            <span>Recrutar Talentos</span>
+                            <span class="text-purple-400 group-hover:animate-pulse">→</span>
+                        </span>
+                    </button>
+                    
+                    <button onclick="showRegistrationChoice()" class="w-full neon-border bg-gradient-to-r from-emerald-800 to-green-700 text-white py-4 px-8 rounded-2xl text-lg font-medium hover:scale-105 transition-all duration-300 card-shadow hover-lift group border-2 border-emerald-400/30 hover:border-emerald-400/60">
+                        <span class="flex items-center justify-center space-x-3">
+                            <span class="text-2xl">🎯</span>
+                            <span>Registrar-se na Arena</span>
+                            <span class="text-emerald-400 group-hover:animate-pulse">→</span>
+                        </span>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Painel Direito -->
+            <div class="side-panel rounded-2xl p-6 card-shadow">
+                <h3 class="text-2xl font-bold mb-6 glow-text">🏆 Hall da Fama</h3>
+                <div class="space-y-4">
+                    <div class="flex items-center space-x-3 p-3 bg-gradient-to-r from-yellow-900/30 to-yellow-800/30 rounded-lg border border-yellow-500/30">
+                        <div class="relative">
+                            <div class="w-12 h-12 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center text-lg font-bold text-black">
+                                MC
+                            </div>
+                            <span class="absolute -top-1 -right-1 text-lg">👑</span>
+                        </div>
+                        <div>
+                            <div class="font-bold text-yellow-400">Maria Costa</div>
+                            <div class="text-sm text-gray-400">Streak: 47 dias</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-3 p-3 bg-gradient-to-r from-gray-700/30 to-gray-600/30 rounded-lg border border-gray-500/30">
+                        <div class="relative">
+                            <div class="w-12 h-12 bg-gradient-to-br from-gray-400 to-gray-600 rounded-full flex items-center justify-center text-lg font-bold text-white">
+                                AS
+                            </div>
+                            <span class="absolute -top-1 -right-1 text-lg">🥈</span>
+                        </div>
+                        <div>
+                            <div class="font-bold text-gray-300">Ana Silva</div>
+                            <div class="text-sm text-gray-400">Streak: 32 dias</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-3 p-3 bg-gradient-to-r from-orange-900/30 to-orange-800/30 rounded-lg border border-orange-500/30">
+                        <div class="relative">
+                            <div class="w-12 h-12 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full flex items-center justify-center text-lg font-bold text-white">
+                                CS
+                            </div>
+                            <span class="absolute -top-1 -right-1 text-lg">🥉</span>
+                        </div>
+                        <div>
+                            <div class="font-bold text-orange-400">Carlos Santos</div>
+                            <div class="text-sm text-gray-400">Streak: 28 dias</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-8">
+                    <h4 class="text-lg font-bold mb-4 text-purple-400">🎯 Desafio do Dia</h4>
+                    <div class="bg-gradient-to-r from-purple-900/30 to-indigo-900/30 rounded-lg p-4 border border-purple-500/30">
+                        <h5 class="font-bold text-purple-300 mb-2">Sistema de Cache LRU</h5>
+                        <p class="text-sm text-gray-400 mb-3">Implemente um cache com política Least Recently Used</p>
+                        <div class="flex justify-between items-center">
+                            <span class="difficulty-hard text-white text-xs px-2 py-1 rounded-full">Difícil</span>
+                            <span class="text-purple-400 text-sm">+500 XP</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tela do Desafiante -->
+    <div id="challengerScreen" class="hidden min-h-screen p-6">
+        <div class="max-w-7xl mx-auto">
+            <!-- Header -->
+            <div class="flex justify-between items-center mb-8">
+                <h1 class="text-3xl font-bold">Desafios de Programação</h1>
+                <button onclick="showHomeScreen()" class="bg-white/20 px-4 py-2 rounded-lg hover:bg-white/30 transition-all">
+                    ← Voltar
+                </button>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                <!-- Ranking Lateral -->
+                <div class="lg:col-span-1">
+                    <div class="bg-gray-900/80 backdrop-blur-sm rounded-2xl p-6 card-shadow">
+                        <h2 class="text-xl font-bold mb-4 text-center glow-text">🏆 Ranking Regional</h2>
+                        <div class="space-y-3" id="challengerRanking">
+                            <!-- Rankings serão inseridos aqui -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Área Principal -->
+                <div class="lg:col-span-3">
+                    <!-- Filtros -->
+                    <div class="bg-gray-900/80 backdrop-blur-sm rounded-2xl p-6 mb-6 card-shadow">
+                        <div class="flex flex-wrap gap-4 items-center">
+                            <div>
+                                <label class="block text-sm font-medium mb-2 text-cyan-400">⚡ Dificuldade:</label>
+                                <select id="difficultyFilter" class="bg-gray-800 border border-cyan-500/30 rounded-lg px-3 py-2 text-white focus:border-cyan-400 focus:outline-none">
+                                    <option value="">Todas</option>
+                                    <option value="Fácil">Fácil</option>
+                                    <option value="Médio">Médio</option>
+                                    <option value="Difícil">Difícil</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2 text-purple-400">🔧 Linguagem:</label>
+                                <select id="languageFilter" class="bg-gray-800 border border-purple-500/30 rounded-lg px-3 py-2 text-white focus:border-purple-400 focus:outline-none">
+                                    <option value="">Todas</option>
+                                    <option value="JavaScript">JavaScript</option>
+                                    <option value="Python">Python</option>
+                                    <option value="C++">C++</option>
+                                    <option value="Java">Java</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Lista de Desafios -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="challengesList">
+                        <!-- Desafios serão inseridos aqui -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tela da Empresa -->
+    <div id="companyScreen" class="hidden min-h-screen p-6">
+        <div class="max-w-7xl mx-auto">
+            <!-- Header -->
+            <div class="flex justify-between items-center mb-8">
+                <h1 class="text-3xl font-bold">Talentos em Programação</h1>
+                <button onclick="showHomeScreen()" class="bg-white/20 px-4 py-2 rounded-lg hover:bg-white/30 transition-all">
+                    ← Voltar
+                </button>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                <!-- Área Principal -->
+                <div class="lg:col-span-3">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="profilesList">
+                        <!-- Perfis serão inseridos aqui -->
+                    </div>
+                </div>
+                
+                <!-- Ranking Lateral -->
+                <div class="lg:col-span-1">
+                    <div class="bg-gray-900/80 backdrop-blur-sm rounded-2xl p-6 card-shadow">
+                        <h2 class="text-xl font-bold mb-4 text-center glow-text">🏆 Top Desenvolvedores</h2>
+                        <div class="space-y-3" id="companyRanking">
+                            <!-- Rankings serão inseridos aqui -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tela do Desafio -->
+    <div id="challengeScreen" class="hidden min-h-screen p-6">
+        <div class="max-w-7xl mx-auto">
+            <!-- Header do Desafio -->
+            <div class="flex justify-between items-center mb-6">
+                <div class="flex items-center space-x-4">
+                    <button onclick="showChallengerScreen()" class="bg-white/20 px-4 py-2 rounded-lg hover:bg-white/30 transition-all">
+                        ← Voltar aos Desafios
+                    </button>
+                    <div class="flex items-center space-x-3">
+                        <div class="w-12 h-12 bg-gradient-to-br from-cyan-400 to-purple-600 rounded-full flex items-center justify-center text-lg font-bold text-white">
+                            JD
+                        </div>
+                        <div>
+                            <div class="font-bold text-white flex items-center space-x-2">
+                                <span>João Dev</span>
+                                <span id="userStreakFire"></span>
+                            </div>
+                            <div class="text-sm text-gray-400">Streak: <span id="userStreakDays">12</span> dias</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <div class="text-sm text-gray-400">Tempo restante</div>
+                    <div class="text-2xl font-bold text-cyan-400" id="challengeTimer">45:00</div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Painel Esquerdo - Descrição do Desafio -->
+                <div class="space-y-6">
+                    <div class="bg-gray-900/80 backdrop-blur-sm rounded-2xl p-6 card-shadow">
+                        <div class="flex justify-between items-start mb-4">
+                            <h1 class="text-2xl font-bold text-white" id="challengeTitle">Sistema de Cache LRU</h1>
+                            <span id="challengeDifficulty" class="difficulty-hard text-white text-sm px-3 py-1 rounded-full font-medium">
+                                Difícil
+                            </span>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <span id="challengeLanguage" class="bg-gradient-to-r from-cyan-600 to-blue-600 text-white text-sm px-3 py-1 rounded-full">
+                                JavaScript
+                            </span>
+                        </div>
+                        
+                        <div class="prose prose-invert max-w-none">
+                            <h3 class="text-lg font-bold text-cyan-400 mb-3">📋 Descrição</h3>
+                            <p class="text-gray-300 mb-4" id="challengeDescription">
+                                Implemente um sistema de cache com política Least Recently Used (LRU). 
+                                O cache deve ter capacidade limitada e remover automaticamente os itens menos recentemente usados quando atingir o limite.
+                            </p>
+                            
+                            <h3 class="text-lg font-bold text-cyan-400 mb-3">🎯 Requisitos</h3>
+                            <ul class="text-gray-300 space-y-2 mb-4">
+                                <li>• Implementar métodos get() e put()</li>
+                                <li>• Capacidade máxima configurável</li>
+                                <li>• Complexidade O(1) para ambas operações</li>
+                                <li>• Remover item menos usado quando necessário</li>
+                            </ul>
+                            
+                            <h3 class="text-lg font-bold text-cyan-400 mb-3">💡 Exemplo</h3>
+                            <div class="bg-gray-800/50 rounded-lg p-4 border border-cyan-500/20">
+                                <pre class="text-sm text-gray-300"><code>const cache = new LRUCache(2);
+cache.put(1, 'primeiro');
+cache.put(2, 'segundo');
+cache.get(1); // retorna 'primeiro'
+cache.put(3, 'terceiro'); // remove chave 2
+cache.get(2); // retorna null</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Casos de Teste -->
+                    <div class="bg-gray-900/80 backdrop-blur-sm rounded-2xl p-6 card-shadow">
+                        <h3 class="text-lg font-bold text-purple-400 mb-4">🧪 Casos de Teste</h3>
+                        <div class="space-y-3" id="testCases">
+                            <div class="bg-gray-800/50 rounded-lg p-3 border border-green-500/20">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-sm text-gray-300">Teste 1: Operações básicas</span>
+                                    <span class="text-green-400 text-sm">✓ Passou</span>
+                                </div>
+                            </div>
+                            <div class="bg-gray-800/50 rounded-lg p-3 border border-gray-500/20">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-sm text-gray-300">Teste 2: Remoção LRU</span>
+                                    <span class="text-gray-400 text-sm">⏳ Aguardando</span>
+                                </div>
+                            </div>
+                            <div class="bg-gray-800/50 rounded-lg p-3 border border-gray-500/20">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-sm text-gray-300">Teste 3: Capacidade máxima</span>
+                                    <span class="text-gray-400 text-sm">⏳ Aguardando</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Painel Direito - Editor de Código -->
+                <div class="space-y-6">
+                    <div class="bg-gray-900/80 backdrop-blur-sm rounded-2xl p-6 card-shadow">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-lg font-bold text-cyan-400">💻 Editor de Código</h3>
+                            <div class="flex items-center space-x-2">
+                                <select id="languageSelector" class="bg-gray-800 border border-cyan-500/30 rounded-lg px-3 py-2 text-white text-sm focus:border-cyan-400 focus:outline-none">
+                                    <option value="javascript">JavaScript</option>
+                                    <option value="python">Python</option>
+                                    <option value="cpp">C++</option>
+                                    <option value="java">Java</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="relative">
+                            <textarea id="codeEditor" class="w-full h-80 bg-gray-800 border border-cyan-500/30 rounded-lg p-4 text-white font-mono text-sm resize-none focus:border-cyan-400 focus:outline-none" placeholder="// Escreva seu código aqui...
+class LRUCache {
+    constructor(capacity) {
+        // Sua implementação aqui
+    }
+    
+    get(key) {
+        // Sua implementação aqui
+    }
+    
+    put(key, value) {
+        // Sua implementação aqui
+    }
+}"></textarea>
+                            <div class="absolute top-2 right-2 text-xs text-gray-500">
+                                Linhas: <span id="lineCount">1</span>
+                            </div>
+                        </div>
+                        
+                        <div class="flex space-x-3 mt-4">
+                            <button onclick="runCode()" class="flex-1 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white py-3 px-6 rounded-lg font-medium transition-all hover:shadow-lg hover:shadow-green-500/25 flex items-center justify-center space-x-2">
+                                <span>▶️</span>
+                                <span>Executar Código</span>
+                            </button>
+                            <button onclick="submitSolution()" class="flex-1 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white py-3 px-6 rounded-lg font-medium transition-all hover:shadow-lg hover:shadow-purple-500/25 flex items-center justify-center space-x-2">
+                                <span>🚀</span>
+                                <span>Enviar Solução</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Console de Saída -->
+                    <div class="bg-gray-900/80 backdrop-blur-sm rounded-2xl p-6 card-shadow">
+                        <h3 class="text-lg font-bold text-green-400 mb-4">📟 Console de Saída</h3>
+                        <div id="codeOutput" class="bg-black/50 rounded-lg p-4 h-40 overflow-y-auto font-mono text-sm border border-green-500/20">
+                            <div class="text-green-400">$ Aguardando execução do código...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Perfil -->
+    <div id="profileModal" class="hidden fixed inset-0 modal-backdrop z-50 flex items-center justify-center p-4">
+        <div class="bg-gray-900/95 backdrop-blur-lg rounded-2xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto card-shadow neon-border">
+            <div class="flex justify-between items-start mb-6">
+                <h2 class="text-2xl font-bold" id="modalName"></h2>
+                <button onclick="closeModal()" class="text-white/70 hover:text-white text-2xl">×</button>
+            </div>
+            <div id="modalContent"></div>
+        </div>
+    </div>
+
+    <script>
+        // Dados mock
+        const mockChallenges = [
+            {
+                id: 1,
+                title: "Soma de Arrays",
+                difficulty: "Fácil",
+                language: "JavaScript",
+                hint: "Use reduce() para somar elementos",
+                description: "Calcule a soma de todos os elementos de um array"
+            },
+            {
+                id: 2,
+                title: "Algoritmo de Ordenação",
+                difficulty: "Médio",
+                language: "Python",
+                hint: "Implemente bubble sort",
+                description: "Ordene um array usando bubble sort"
+            },
+            {
+                id: 3,
+                title: "Árvore Binária",
+                difficulty: "Difícil",
+                language: "C++",
+                hint: "Use recursão para percorrer",
+                description: "Implemente busca em árvore binária"
+            },
+            {
+                id: 4,
+                title: "Validador de CPF",
+                difficulty: "Médio",
+                language: "Java",
+                hint: "Verifique os dígitos verificadores",
+                description: "Valide se um CPF é válido"
+            },
+            {
+                id: 5,
+                title: "FizzBuzz Avançado",
+                difficulty: "Fácil",
+                language: "Python",
+                hint: "Use operador módulo",
+                description: "Implemente FizzBuzz com regras customizadas"
+            },
+            {
+                id: 6,
+                title: "Sistema de Cache",
+                difficulty: "Difícil",
+                language: "JavaScript",
+                hint: "Use Map para armazenar dados",
+                description: "Implemente um sistema de cache LRU"
+            }
+        ];
+
+        const mockUsers = [
+            {
+                id: 1,
+                name: "Ana Silva",
+                streak: 15,
+                challenges: 47,
+                languages: ["JavaScript", "Python", "React"],
+                level: "Avançado",
+                bio: "Desenvolvedora Full Stack com 3 anos de experiência"
+            },
+            {
+                id: 2,
+                name: "Carlos Santos",
+                streak: 8,
+                challenges: 32,
+                languages: ["Java", "C++", "Spring"],
+                level: "Intermediário",
+                bio: "Engenheiro de Software especializado em backend"
+            },
+            {
+                id: 3,
+                name: "Maria Costa",
+                streak: 23,
+                challenges: 68,
+                languages: ["Python", "JavaScript", "Django"],
+                level: "Expert",
+                bio: "Tech Lead com foco em arquitetura de sistemas"
+            },
+            {
+                id: 4,
+                name: "João Oliveira",
+                streak: 5,
+                challenges: 19,
+                languages: ["JavaScript", "Node.js"],
+                level: "Iniciante",
+                bio: "Desenvolvedor júnior em transição de carreira"
+            },
+            {
+                id: 5,
+                name: "Lucia Ferreira",
+                streak: 12,
+                challenges: 41,
+                languages: ["C++", "Python", "Machine Learning"],
+                level: "Avançado",
+                bio: "Cientista de dados e desenvolvedora"
+            }
+        ];
+
+        // Estado atual do login
+        let currentLoginType = 'challenger';
+        let currentUser = null;
+
+        // Funções de navegação
+        function showHomeScreen() {
+            document.getElementById('homeScreen').classList.remove('hidden');
+            hideAllOtherScreens('homeScreen');
+        }
+
+        function showChallengerLogin() {
+            document.getElementById('challengerLoginScreen').classList.remove('hidden');
+            hideAllOtherScreens('challengerLoginScreen');
+        }
+
+        function showCompanyLogin() {
+            document.getElementById('companyLoginScreen').classList.remove('hidden');
+            hideAllOtherScreens('companyLoginScreen');
+        }
+
+        function showRegistrationChoice() {
+            document.getElementById('registrationChoiceScreen').classList.remove('hidden');
+            hideAllOtherScreens('registrationChoiceScreen');
+        }
+
+        function showRegisterScreen(type) {
+            if (type === 'challenger') {
+                document.getElementById('challengerRegisterScreen').classList.remove('hidden');
+                hideAllOtherScreens('challengerRegisterScreen');
+            } else {
+                document.getElementById('companyRegisterScreen').classList.remove('hidden');
+                hideAllOtherScreens('companyRegisterScreen');
+            }
+        }
+
+        function hideAllOtherScreens(currentScreen) {
+            const screens = [
+                'homeScreen', 'challengerLoginScreen', 'companyLoginScreen', 
+                'registrationChoiceScreen', 'challengerRegisterScreen', 
+                'companyRegisterScreen', 'challengerScreen', 'companyScreen', 
+                'challengeScreen'
+            ];
+            
+            screens.forEach(screen => {
+                if (screen !== currentScreen) {
+                    document.getElementById(screen).classList.add('hidden');
+                }
+            });
+        }
+
+        // Funções de login
+        function handleChallengerLogin(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('challengerLoginEmail').value;
+            const password = document.getElementById('challengerLoginPassword').value;
+            const errorDiv = document.getElementById('challengerLoginError');
+            
+            // Validação básica
+            if (!email || !password) {
+                showError(errorDiv, 'Por favor, preencha todos os campos.');
+                return;
+            }
+            
+            // Simular autenticação
+            setTimeout(() => {
+                if (email === 'demo@demo.com' && password === '123456') {
+                    currentUser = {
+                        name: 'João Dev',
+                        type: 'challenger',
+                        email: email
+                    };
+                    
+                    hideError(errorDiv);
+                    showChallengerScreen();
+                } else {
+                    showError(errorDiv, 'E-mail ou senha incorretos. Tente: demo@demo.com / 123456');
+                }
+            }, 1000);
+        }
+
+        function handleCompanyLogin(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('companyLoginEmail').value;
+            const password = document.getElementById('companyLoginPassword').value;
+            const errorDiv = document.getElementById('companyLoginError');
+            
+            // Validação básica
+            if (!email || !password) {
+                showError(errorDiv, 'Por favor, preencha todos os campos.');
+                return;
+            }
+            
+            // Simular autenticação
+            setTimeout(() => {
+                if (email === 'demo@demo.com' && password === '123456') {
+                    currentUser = {
+                        name: 'TechCorp',
+                        type: 'company',
+                        email: email
+                    };
+                    
+                    hideError(errorDiv);
+                    showCompanyScreen();
+                } else {
+                    showError(errorDiv, 'E-mail ou senha incorretos. Tente: demo@demo.com / 123456');
+                }
+            }, 1000);
+        }
+
+        // Dados das linguagens de programação
+        const programmingLanguages = [
+            { name: 'JavaScript', icon: '✨', category: 'web' },
+            { name: 'Python', icon: '🐍', category: 'backend' },
+            { name: 'Java', icon: '☕', category: 'backend' },
+            { name: 'C++', icon: '💻', category: 'systems' },
+            { name: 'HTML/CSS', icon: '🌐', category: 'web' },
+            { name: 'React', icon: '⚛️', category: 'web' },
+            { name: 'Node.js', icon: '🟢', category: 'backend' },
+            { name: 'PHP', icon: '🐘', category: 'backend' },
+            { name: 'C#', icon: '🔷', category: 'backend' },
+            { name: 'TypeScript', icon: '📘', category: 'web' },
+            { name: 'Go', icon: '🐹', category: 'backend' },
+            { name: 'Rust', icon: '🦀', category: 'systems' },
+            { name: 'Swift', icon: '🍎', category: 'mobile' },
+            { name: 'Kotlin', icon: '🤖', category: 'mobile' },
+            { name: 'SQL', icon: '🗄️', category: 'database' },
+            { name: 'MongoDB', icon: '🍃', category: 'database' }
+        ];
+
+        const knowledgeLevels = [
+            { value: 'iniciante', label: 'Iniciante', description: 'Conhecimento básico' },
+            { value: 'aprendiz', label: 'Aprendiz', description: 'Estudando ativamente' },
+            { value: 'junior', label: 'Júnior', description: 'Experiência prática' },
+            { value: 'pleno', label: 'Pleno', description: 'Conhecimento sólido' },
+            { value: 'senior', label: 'Sênior', description: 'Expertise avançada' }
+        ];
+
+        let selectedLanguages = new Map(); // Map para armazenar linguagem -> nível
+
+        // Funções de cadastro
+        function toggleKnowledgeFields(show) {
+            const knowledgeFields = document.getElementById('knowledgeFields');
+            if (show) {
+                knowledgeFields.classList.remove('hidden');
+                initializeLanguageGrid();
+                initializeLanguageSearch();
+            } else {
+                knowledgeFields.classList.add('hidden');
+                selectedLanguages.clear();
+                updateSelectedLanguagesDisplay();
+            }
+        }
+
+        function toggleNoLanguageOption() {
+            const noLanguageCheckbox = document.getElementById('noLanguageYet');
+            const searchContainer = document.getElementById('languageSearchContainer');
+            const languageGrid = document.getElementById('languageGrid').parentElement;
+            const selectedContainer = document.getElementById('selectedLanguagesContainer');
+            
+            if (noLanguageCheckbox.checked) {
+                // Esconder seleção de linguagens
+                searchContainer.classList.add('hidden');
+                languageGrid.classList.add('hidden');
+                selectedContainer.classList.add('hidden');
+                selectedLanguages.clear();
+                updateSelectedLanguagesDisplay();
+            } else {
+                // Mostrar seleção de linguagens
+                searchContainer.classList.remove('hidden');
+                languageGrid.classList.remove('hidden');
+            }
+        }
+
+        function initializeLanguageGrid() {
+            const grid = document.getElementById('languageGrid');
+            grid.innerHTML = programmingLanguages.map(lang => `
+                <div class="language-card relative rounded-xl p-4 text-center" onclick="toggleLanguageSelection('${lang.name}')">
+                    <div class="text-3xl mb-2">${lang.icon}</div>
+                    <div class="text-white font-medium text-sm">${lang.name}</div>
+                </div>
+            `).join('');
+        }
+
+        function initializeLanguageSearch() {
+            const searchInput = document.getElementById('languageSearch');
+            searchInput.addEventListener('input', function(e) {
+                const searchTerm = e.target.value.toLowerCase();
+                const cards = document.querySelectorAll('.language-card');
+                
+                cards.forEach(card => {
+                    const languageName = card.textContent.toLowerCase();
+                    if (languageName.includes(searchTerm)) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        }
+
+        function toggleLanguageSelection(languageName) {
+            if (selectedLanguages.has(languageName)) {
+                // Remover linguagem
+                selectedLanguages.delete(languageName);
+                updateLanguageCardAppearance(languageName, false);
+            } else {
+                // Adicionar linguagem - mostrar seletor de nível
+                showLevelSelector(languageName);
+            }
+            updateSelectedLanguagesDisplay();
+        }
+
+        function showLevelSelector(languageName) {
+            // Remover qualquer seletor existente
+            const existingSelector = document.querySelector('.level-selector');
+            if (existingSelector) {
+                existingSelector.remove();
+            }
+
+            // Encontrar o card da linguagem
+            const cards = document.querySelectorAll('.language-card');
+            let targetCard = null;
+            cards.forEach(card => {
+                if (card.textContent.includes(languageName)) {
+                    targetCard = card;
+                }
+            });
+
+            if (!targetCard) return;
+
+            // Criar seletor de nível
+            const selector = document.createElement('div');
+            selector.className = 'level-selector absolute z-10 mt-2 p-4 rounded-xl shadow-2xl';
+            selector.style.minWidth = '280px';
+            
+            selector.innerHTML = `
+                <div class="text-center mb-3">
+                    <h4 class="text-white font-bold">Qual seu nível com ${languageName}?</h4>
+                </div>
+                <div class="space-y-2">
+                    ${knowledgeLevels.map(level => `
+                        <button class="level-button w-full text-left p-3 rounded-lg border border-blue-500/20 text-white hover:border-blue-400/40" onclick="selectLanguageLevel('${languageName}', '${level.value}')">
+                            <div class="font-medium">${level.label}</div>
+                            <div class="text-sm text-blue-200">${level.description}</div>
+                        </button>
+                    `).join('')}
+                </div>
+                <button class="w-full mt-3 p-2 text-gray-400 hover:text-white transition-colors text-sm" onclick="closeLevelSelector()">
+                    Cancelar
+                </button>
+            `;
+
+            // Posicionar o seletor
+            targetCard.style.position = 'relative';
+            targetCard.appendChild(selector);
+        }
+
+        function selectLanguageLevel(languageName, level) {
+            selectedLanguages.set(languageName, level);
+            updateLanguageCardAppearance(languageName, true);
+            closeLevelSelector();
+            updateSelectedLanguagesDisplay();
+        }
+
+        function closeLevelSelector() {
+            const selector = document.querySelector('.level-selector');
+            if (selector) {
+                selector.remove();
+            }
+        }
+
+        function updateLanguageCardAppearance(languageName, isSelected) {
+            const cards = document.querySelectorAll('.language-card');
+            cards.forEach(card => {
+                if (card.textContent.includes(languageName)) {
+                    if (isSelected) {
+                        card.classList.add('selected');
+                    } else {
+                        card.classList.remove('selected');
+                    }
+                }
+            });
+        }
+
+        function updateSelectedLanguagesDisplay() {
+            const container = document.getElementById('selectedLanguagesContainer');
+            const list = document.getElementById('selectedLanguagesList');
+            
+            if (selectedLanguages.size === 0) {
+                container.classList.add('hidden');
+                return;
+            }
+            
+            container.classList.remove('hidden');
+            
+            const html = Array.from(selectedLanguages.entries()).map(([lang, level]) => {
+                const langData = programmingLanguages.find(l => l.name === lang);
+                const levelData = knowledgeLevels.find(l => l.value === level);
+                
+                return `
+                    <div class="bg-gradient-to-r from-green-900/20 to-blue-900/20 rounded-xl p-4 border border-green-500/30 flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <span class="text-2xl">${langData?.icon || '💻'}</span>
+                            <div>
+                                <div class="text-white font-medium">${lang}</div>
+                                <div class="text-green-300 text-sm">${levelData?.label} - ${levelData?.description}</div>
+                            </div>
+                        </div>
+                        <button onclick="removeSelectedLanguage('${lang}')" class="text-red-400 hover:text-red-300 transition-colors p-2">
+                            ✕
+                        </button>
+                    </div>
+                `;
+            }).join('');
+            
+            list.innerHTML = html;
+        }
+
+        function removeSelectedLanguage(languageName) {
+            selectedLanguages.delete(languageName);
+            updateLanguageCardAppearance(languageName, false);
+            updateSelectedLanguagesDisplay();
+        }
+
+        // Fechar seletor ao clicar fora
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.language-card') && !e.target.closest('.level-selector')) {
+                closeLevelSelector();
+            }
+        });
+
+        function handleChallengerRegister(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('challengerName').value;
+            const cpf = document.getElementById('challengerCPF').value;
+            const email = document.getElementById('challengerEmail').value;
+            const password = document.getElementById('challengerPassword').value;
+            const passwordConfirm = document.getElementById('challengerPasswordConfirm').value;
+            const errorDiv = document.getElementById('challengerRegisterError');
+            
+            // Validações
+            if (!name || !cpf || !email || !password || !passwordConfirm) {
+                showError(errorDiv, 'Por favor, preencha todos os campos obrigatórios.');
+                return;
+            }
+            
+            if (password !== passwordConfirm) {
+                showError(errorDiv, 'As senhas não coincidem.');
+                return;
+            }
+            
+            if (password.length < 6) {
+                showError(errorDiv, 'A senha deve ter pelo menos 6 caracteres.');
+                return;
+            }
+            
+            if (!isValidCPF(cpf)) {
+                showError(errorDiv, 'CPF inválido. Use o formato: 000.000.000-00');
+                return;
+            }
+            
+            // Simular cadastro
+            hideError(errorDiv);
+            setTimeout(() => {
+                alert('🎉 Cadastro realizado com sucesso!\n\nBem-vindo ao CodeArena! Você já pode fazer login e começar a resolver desafios.');
+                showLoginScreen();
+            }, 1500);
+        }
+
+        function handleCompanyRegister(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('companyName').value;
+            const cnpj = document.getElementById('companyCNPJ').value;
+            const email = document.getElementById('companyEmail').value;
+            const responsible = document.getElementById('companyResponsible').value;
+            const password = document.getElementById('companyPassword').value;
+            const passwordConfirm = document.getElementById('companyPasswordConfirm').value;
+            const errorDiv = document.getElementById('companyRegisterError');
+            
+            // Validações
+            if (!name || !cnpj || !email || !responsible || !password || !passwordConfirm) {
+                showError(errorDiv, 'Por favor, preencha todos os campos obrigatórios.');
+                return;
+            }
+            
+            if (password !== passwordConfirm) {
+                showError(errorDiv, 'As senhas não coincidem.');
+                return;
+            }
+            
+            if (password.length < 6) {
+                showError(errorDiv, 'A senha deve ter pelo menos 6 caracteres.');
+                return;
+            }
+            
+            if (!isValidCNPJ(cnpj)) {
+                showError(errorDiv, 'CNPJ inválido. Use o formato: 00.000.000/0000-00');
+                return;
+            }
+            
+            // Simular cadastro
+            hideError(errorDiv);
+            setTimeout(() => {
+                alert('🏆 Cadastro empresarial realizado com sucesso!\n\nSua empresa já pode acessar nossa base de talentos em programação.');
+                showLoginScreen();
+            }, 1500);
+        }
+
+        // Funções auxiliares
+        function showError(errorDiv, message) {
+            errorDiv.textContent = message;
+            errorDiv.classList.remove('hidden');
+        }
+
+        function hideError(errorDiv) {
+            errorDiv.classList.add('hidden');
+        }
+
+        function isValidCPF(cpf) {
+            // Validação básica de formato
+            const cpfRegex = /^\d{3}\.\d{3}\.\d{3}-\d{2}$/;
+            return cpfRegex.test(cpf);
+        }
+
+        function isValidCNPJ(cnpj) {
+            // Validação básica de formato
+            const cnpjRegex = /^\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}$/;
+            return cnpjRegex.test(cnpj);
+        }
+
+        function showForgotPassword() {
+            alert('🔐 Funcionalidade de recuperação de senha\n\nEm breve você receberá um e-mail com instruções para redefinir sua senha.');
+        }
+
+        // Máscaras para CPF e CNPJ
+        document.addEventListener('DOMContentLoaded', function() {
+            const cpfInput = document.getElementById('challengerCPF');
+            const cnpjInput = document.getElementById('companyCNPJ');
+            
+            if (cpfInput) {
+                cpfInput.addEventListener('input', function(e) {
+                    let value = e.target.value.replace(/\D/g, '');
+                    value = value.replace(/(\d{3})(\d)/, '$1.$2');
+                    value = value.replace(/(\d{3})(\d)/, '$1.$2');
+                    value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+                    e.target.value = value;
+                });
+            }
+            
+            if (cnpjInput) {
+                cnpjInput.addEventListener('input', function(e) {
+                    let value = e.target.value.replace(/\D/g, '');
+                    value = value.replace(/(\d{2})(\d)/, '$1.$2');
+                    value = value.replace(/(\d{3})(\d)/, '$1.$2');
+                    value = value.replace(/(\d{3})(\d)/, '$1/$2');
+                    value = value.replace(/(\d{4})(\d{1,2})$/, '$1-$2');
+                    e.target.value = value;
+                });
+            }
+        });
+
+        // Inicializar na tela inicial
+        document.addEventListener('DOMContentLoaded', function() {
+            showHomeScreen();
+        });
+
+        function showChallengerScreen() {
+            document.getElementById('challengerScreen').classList.remove('hidden');
+            hideAllOtherScreens('challengerScreen');
+            loadChallengerData();
+        }
+
+        function showCompanyScreen() {
+            document.getElementById('companyScreen').classList.remove('hidden');
+            hideAllOtherScreens('companyScreen');
+            loadCompanyData();
+        }
+
+        // Função para gerar fogo do streak com sistema de cores avançado
+        function getStreakFire(streak) {
+            let color, intensity, level;
+            
+            if (streak < 3) {
+                color = '#fbbf24'; // Amarelo
+                intensity = '🔥';
+                level = 'Iniciante';
+            } else if (streak < 7) {
+                color = '#f97316'; // Laranja
+                intensity = '🔥🔥';
+                level = 'Aquecendo';
+            } else if (streak < 15) {
+                color = '#ef4444'; // Vermelho
+                intensity = '🔥🔥🔥';
+                level = 'Em Chamas';
+            } else if (streak < 30) {
+                color = '#3b82f6'; // Azul
+                intensity = '🔥🔥🔥🔥';
+                level = 'Incandescente';
+            } else if (streak < 60) {
+                color = '#8b5cf6'; // Roxo
+                intensity = '🔥🔥🔥🔥🔥';
+                level = 'Lendário';
+            } else {
+                color = '#1f2937'; // Preto/Cinza escuro
+                intensity = '🔥🔥🔥🔥🔥🔥';
+                level = 'Imortal';
+            }
+            
+            return {
+                html: `<span class="streak-fire" style="color: ${color}; text-shadow: 0 0 10px ${color};">${intensity}</span>`,
+                level: level,
+                color: color
+            };
+        }
+
+        // Função para mostrar tela do desafio
+        function showChallengeScreen(challengeId) {
+            document.getElementById('challengeScreen').classList.remove('hidden');
+            hideAllOtherScreens('challengeScreen');
+            
+            // Carregar dados do desafio
+            const challenge = mockChallenges.find(c => c.id === challengeId) || mockChallenges[0];
+            loadChallengeData(challenge);
+            
+            // Inicializar timer
+            startChallengeTimer();
+            
+            // Atualizar streak do usuário
+            updateUserStreak(12); // Exemplo: 12 dias de streak
+        }
+
+        // Função para atualizar o streak do usuário
+        function updateUserStreak(streakDays) {
+            const streakData = getStreakFire(streakDays);
+            document.getElementById('userStreakFire').innerHTML = streakData.html;
+            document.getElementById('userStreakDays').textContent = streakDays;
+        }
+
+        // Função para carregar dados do desafio
+        function loadChallengeData(challenge) {
+            document.getElementById('challengeTitle').textContent = challenge.title;
+            document.getElementById('challengeDescription').textContent = challenge.description;
+            document.getElementById('challengeLanguage').textContent = challenge.language;
+            
+            const difficultyClass = challenge.difficulty === 'Fácil' ? 'difficulty-easy' : 
+                                  challenge.difficulty === 'Médio' ? 'difficulty-medium' : 'difficulty-hard';
+            document.getElementById('challengeDifficulty').className = `${difficultyClass} text-white text-sm px-3 py-1 rounded-full font-medium`;
+            document.getElementById('challengeDifficulty').textContent = challenge.difficulty;
+            
+            // Definir linguagem no seletor
+            document.getElementById('languageSelector').value = challenge.language.toLowerCase();
+            
+            // Limpar editor e console
+            document.getElementById('codeEditor').value = '';
+            document.getElementById('codeOutput').innerHTML = '<div class="text-green-400">$ Aguardando execução do código...</div>';
+        }
+
+        // Função para iniciar timer do desafio
+        function startChallengeTimer() {
+            let timeLeft = 45 * 60; // 45 minutos em segundos
+            
+            const timer = setInterval(() => {
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                document.getElementById('challengeTimer').textContent = 
+                    `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    document.getElementById('challengeTimer').textContent = '00:00';
+                    document.getElementById('challengeTimer').classList.add('text-red-400');
+                }
+                timeLeft--;
+            }, 1000);
+        }
+
+        // Função para executar código
+        function runCode() {
+            const code = document.getElementById('codeEditor').value;
+            const language = document.getElementById('languageSelector').value;
+            const output = document.getElementById('codeOutput');
+            
+            if (!code.trim()) {
+                output.innerHTML = '<div class="text-red-400">$ Erro: Código vazio</div>';
+                return;
+            }
+            
+            // Simular execução do código
+            output.innerHTML = '<div class="text-yellow-400">$ Executando código...</div>';
+            
+            setTimeout(() => {
+                const results = [
+                    '<div class="text-green-400">$ Código executado com sucesso!</div>',
+                    '<div class="text-gray-300">$ Teste 1: ✓ Passou</div>',
+                    '<div class="text-gray-300">$ Teste 2: ✓ Passou</div>',
+                    '<div class="text-gray-300">$ Teste 3: ✗ Falhou - Esperado: null, Recebido: undefined</div>',
+                    '<div class="text-cyan-400">$ Tempo de execução: 0.045s</div>'
+                ];
+                
+                output.innerHTML = results.join('');
+                
+                // Atualizar casos de teste
+                updateTestCases([true, true, false]);
+            }, 1500);
+        }
+
+        // Função para enviar solução
+        function submitSolution() {
+            const code = document.getElementById('codeEditor').value;
+            
+            if (!code.trim()) {
+                alert('Por favor, escreva seu código antes de enviar!');
+                return;
+            }
+            
+            // Simular envio da solução
+            const output = document.getElementById('codeOutput');
+            output.innerHTML = '<div class="text-purple-400">$ Enviando solução...</div>';
+            
+            setTimeout(() => {
+                const success = Math.random() > 0.3; // 70% chance de sucesso
+                
+                if (success) {
+                    output.innerHTML = [
+                        '<div class="text-green-400">$ ✅ Solução aceita!</div>',
+                        '<div class="text-cyan-400">$ +150 XP ganhos</div>',
+                        '<div class="text-purple-400">$ Streak mantido! 🔥</div>',
+                        '<div class="text-gray-300">$ Tempo total: 23:45</div>'
+                    ].join('');
+                    
+                    // Atualizar todos os casos de teste como passou
+                    updateTestCases([true, true, true]);
+                    
+                    // Mostrar modal de sucesso após um tempo
+                    setTimeout(() => {
+                        alert('🎉 Parabéns! Desafio concluído com sucesso!\n\n+150 XP\nStreak mantido\nNovo recorde pessoal!');
+                    }, 2000);
+                } else {
+                    output.innerHTML = [
+                        '<div class="text-red-400">$ ❌ Solução rejeitada</div>',
+                        '<div class="text-gray-300">$ Alguns casos de teste falharam</div>',
+                        '<div class="text-yellow-400">$ Dica: Verifique a lógica de remoção LRU</div>'
+                    ].join('');
+                }
+            }, 2000);
+        }
+
+        // Função para atualizar casos de teste
+        function updateTestCases(results) {
+            const testCases = document.getElementById('testCases');
+            const tests = [
+                'Teste 1: Operações básicas',
+                'Teste 2: Remoção LRU', 
+                'Teste 3: Capacidade máxima'
+            ];
+            
+            const html = tests.map((test, index) => {
+                const passed = results[index];
+                const statusClass = passed ? 'border-green-500/20' : results[index] === false ? 'border-red-500/20' : 'border-gray-500/20';
+                const statusText = passed ? '✓ Passou' : results[index] === false ? '✗ Falhou' : '⏳ Aguardando';
+                const statusColor = passed ? 'text-green-400' : results[index] === false ? 'text-red-400' : 'text-gray-400';
+                
+                return `
+                    <div class="bg-gray-800/50 rounded-lg p-3 border ${statusClass}">
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-300">${test}</span>
+                            <span class="${statusColor} text-sm">${statusText}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            testCases.innerHTML = html;
+        }
+
+        // Contador de linhas no editor
+        document.addEventListener('DOMContentLoaded', function() {
+            const editor = document.getElementById('codeEditor');
+            const lineCount = document.getElementById('lineCount');
+            
+            if (editor && lineCount) {
+                editor.addEventListener('input', function() {
+                    const lines = this.value.split('\n').length;
+                    lineCount.textContent = lines;
+                });
+            }
+        });
+
+        // Carregar dados do desafiante
+        function loadChallengerData() {
+            // Carregar ranking
+            const rankingHtml = mockUsers
+                .sort((a, b) => b.challenges - a.challenges)
+                .map((user, index) => `
+                    <div class="flex items-center justify-between p-3 bg-gray-800/50 rounded-lg hover:bg-gray-700/50 transition-all cursor-pointer border border-cyan-500/20 hover:border-cyan-400/40" onclick="openProfile(${user.id})">
+                        <div class="flex items-center space-x-3">
+                            <span class="text-lg font-bold text-blue-300">#${index + 1}</span>
+                            <div class="w-10 h-10 bg-gradient-to-br from-cyan-400 to-blue-600 rounded-full flex items-center justify-center text-sm font-bold text-white">
+                                ${user.name.split(' ').map(n => n[0]).join('')}
+                            </div>
+                            <div>
+                                <div class="font-medium">${user.name}</div>
+                                <div class="text-sm text-blue-200">${user.challenges} desafios</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-1">
+                            ${getStreakFire(user.streak).html}
+                            <span class="text-sm">${user.streak}</span>
+                        </div>
+                    </div>
+                `).join('');
+            
+            document.getElementById('challengerRanking').innerHTML = rankingHtml;
+            
+            // Carregar desafios
+            loadChallenges();
+            
+            // Adicionar event listeners para filtros
+            document.getElementById('difficultyFilter').addEventListener('change', loadChallenges);
+            document.getElementById('languageFilter').addEventListener('change', loadChallenges);
+        }
+
+        // Carregar desafios com filtros
+        function loadChallenges() {
+            const difficultyFilter = document.getElementById('difficultyFilter').value;
+            const languageFilter = document.getElementById('languageFilter').value;
+            
+            const filteredChallenges = mockChallenges.filter(challenge => {
+                return (!difficultyFilter || challenge.difficulty === difficultyFilter) &&
+                       (!languageFilter || challenge.language === languageFilter);
+            });
+            
+            const challengesHtml = filteredChallenges.map(challenge => {
+                const difficultyClass = challenge.difficulty === 'Fácil' ? 'difficulty-easy' : 
+                                      challenge.difficulty === 'Médio' ? 'difficulty-medium' : 'difficulty-hard';
+                
+                return `
+                    <div class="bg-gray-900/80 backdrop-blur-sm rounded-2xl p-6 card-shadow hover-lift cursor-pointer neon-border">
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="text-xl font-bold text-white">${challenge.title}</h3>
+                            <span class="${difficultyClass} text-white text-xs px-3 py-1 rounded-full font-medium">
+                                ${challenge.difficulty}
+                            </span>
+                        </div>
+                        
+                        <p class="text-gray-300 mb-4">${challenge.description}</p>
+                        
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center space-x-4">
+                                <span class="bg-gradient-to-r from-cyan-600 to-blue-600 text-white text-sm px-3 py-1 rounded-full">
+                                    ${challenge.language}
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-4 p-3 bg-gray-800/50 rounded-lg border border-cyan-500/20">
+                            <p class="text-sm text-cyan-300">💡 Dica: ${challenge.hint}</p>
+                        </div>
+                        
+                        <button onclick="showChallengeScreen(${challenge.id})" class="w-full mt-4 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white py-3 px-6 rounded-lg font-medium transition-all hover:shadow-lg hover:shadow-cyan-500/25">
+                            ⚔️ Aceitar Desafio
+                        </button>
+                    </div>
+                `;
+            }).join('');
+            
+            document.getElementById('challengesList').innerHTML = challengesHtml;
+        }
+
+        // Carregar dados da empresa
+        function loadCompanyData() {
+            // Carregar ranking
+            const rankingHtml = mockUsers
+                .sort((a, b) => b.challenges - a.challenges)
+                .slice(0, 5)
+                .map((user, index) => `
+                    <div class="flex items-center justify-between p-3 bg-gray-800/50 rounded-lg hover:bg-gray-700/50 transition-all cursor-pointer border border-cyan-500/20 hover:border-cyan-400/40" onclick="openProfile(${user.id})">
+                        <div class="flex items-center space-x-3">
+                            <span class="text-lg font-bold text-blue-300">#${index + 1}</span>
+                            <div class="w-10 h-10 bg-gradient-to-br from-purple-400 to-indigo-600 rounded-full flex items-center justify-center text-sm font-bold text-white">
+                                ${user.name.split(' ').map(n => n[0]).join('')}
+                            </div>
+                            <div>
+                                <div class="font-medium">${user.name}</div>
+                                <div class="text-sm text-blue-200">${user.level}</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-1">
+                            ${getStreakFire(user.streak).html}
+                        </div>
+                    </div>
+                `).join('');
+            
+            document.getElementById('companyRanking').innerHTML = rankingHtml;
+            
+            // Carregar perfis
+            const profilesHtml = mockUsers.map(user => `
+                <div class="bg-gray-900/80 backdrop-blur-sm rounded-2xl p-6 card-shadow hover-lift cursor-pointer neon-border" onclick="openProfile(${user.id})">
+                    <div class="flex items-start space-x-4 mb-4">
+                        <div class="w-16 h-16 bg-gradient-to-br from-cyan-400 to-purple-600 rounded-full flex items-center justify-center text-xl font-bold text-white flex-shrink-0">
+                            ${user.name.split(' ').map(n => n[0]).join('')}
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex items-start justify-between">
+                                <div>
+                                    <h3 class="text-xl font-bold flex items-center space-x-2">
+                                        <span class="text-white">${user.name}</span>
+                                        ${getStreakFire(user.streak).html}
+                                    </h3>
+                                    <p class="text-cyan-400">${user.level}</p>
+                                </div>
+                                <button class="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white px-4 py-2 rounded-lg text-sm transition-all hover:shadow-lg hover:shadow-purple-500/25">
+                                    Seguir
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <p class="text-gray-300 mb-4">${user.bio}</p>
+                    
+                    <div class="space-y-3">
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Desafios Concluídos:</span>
+                            <span class="font-bold text-cyan-400">${user.challenges}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Streak Atual:</span>
+                            <span class="font-bold text-purple-400">${user.streak} dias</span>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <p class="text-sm text-gray-400 mb-2">Linguagens:</p>
+                        <div class="flex flex-wrap gap-2">
+                            ${user.languages.map(lang => `
+                                <span class="bg-gradient-to-r from-cyan-600 to-blue-600 text-white text-xs px-2 py-1 rounded-full">${lang}</span>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            
+            document.getElementById('profilesList').innerHTML = profilesHtml;
+        }
+
+        // Abrir modal de perfil
+        function openProfile(userId) {
+            const user = mockUsers.find(u => u.id === userId);
+            if (!user) return;
+            
+            document.getElementById('modalName').textContent = user.name;
+            
+            const modalContent = `
+                <div class="space-y-6">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-24 h-24 bg-gradient-to-br from-cyan-400 to-purple-600 rounded-full flex items-center justify-center text-2xl font-bold text-white border-2 border-cyan-400/30">
+                            ${user.name.split(' ').map(n => n[0]).join('')}
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold flex items-center space-x-2">
+                                <span>${user.name}</span>
+                                ${getStreakFire(user.streak).html}
+                            </h3>
+                            <p class="text-blue-200">${user.level}</p>
+                            <p class="text-sm text-blue-300">Streak: ${user.streak} dias</p>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white/5 rounded-lg p-4">
+                        <h4 class="font-bold mb-2">Sobre</h4>
+                        <p class="text-blue-100">${user.bio}</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-white/5 rounded-lg p-4 text-center">
+                            <div class="text-2xl font-bold text-blue-300">${user.challenges}</div>
+                            <div class="text-sm text-blue-200">Desafios Concluídos</div>
+                        </div>
+                        <div class="bg-white/5 rounded-lg p-4 text-center">
+                            <div class="text-2xl font-bold text-blue-300">${user.languages.length}</div>
+                            <div class="text-sm text-blue-200">Linguagens</div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h4 class="font-bold mb-3">Linguagens Dominadas</h4>
+                        <div class="grid grid-cols-2 gap-3">
+                            ${user.languages.map(lang => `
+                                <div class="bg-white/5 rounded-lg p-3">
+                                    <div class="font-medium">${lang}</div>
+                                    <div class="w-full bg-white/10 rounded-full h-2 mt-2">
+                                        <div class="bg-gradient-to-r from-blue-400 to-blue-600 h-2 rounded-full" style="width: ${Math.floor(Math.random() * 40) + 60}%"></div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    
+                    <div class="flex space-x-3">
+                        <button class="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white py-3 px-6 rounded-lg font-medium transition-all">
+                            Conectar
+                        </button>
+                        <button class="flex-1 bg-white/10 hover:bg-white/20 text-white py-3 px-6 rounded-lg font-medium transition-all">
+                            Mensagem
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('modalContent').innerHTML = modalContent;
+            document.getElementById('profileModal').classList.remove('hidden');
+        }
+
+        // Fechar modal
+        function closeModal() {
+            document.getElementById('profileModal').classList.add('hidden');
+        }
+
+        // Fechar modal ao clicar fora
+        document.getElementById('profileModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9842e745a4afeede',t:'MTc1ODcyMzQyNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
